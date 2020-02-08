@@ -69,10 +69,13 @@ class Animation{
         this.counter = 0
         this.currentAnimation = animation['idle']
         
-        this.start()
         this.currentFrame = this.sprite.currentFrame
 
-        console.log(animation)
+        this.start()
+    }
+
+    set(){
+        this.counter = 0
     }
 
     start(){
@@ -105,29 +108,32 @@ const obj = {
     sprite : null,
     sprite2 : null,
 }
-let ai = 0
+
 let loading = true
 const loop = setInterval(() => {
     
+    //if loaded data from server create objects
     if(GAME_OBJECTS !== null && loading){
         const img = GAME_OBJECTS.player.image
         const animation = GAME_OBJECTS.player.animation
         obj.sprite = new Animation(new Sprite(img), animation)
         obj.sprite2 = new Animation(new Sprite(img), animation)
-        // obj.sprite2 = new Sprite(img)
         loading = false
     }
 
+    //after loading files start game loop
+    if(!loading){
+        painter.clear()
+        painter.image(obj.sprite.currentFrame)
+        painter.image(obj.sprite2.currentFrame,80,0)
+    }
 
-    painter.clear()
-    painter.image(obj.sprite.currentFrame)
-    painter.image(obj.sprite2.currentFrame,80,0)
 
 
     // painter.image(obj.sprite.frame)
 
 
-},16)
+},17)
 
 
 
