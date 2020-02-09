@@ -17,7 +17,7 @@ let MONSTERS = [
                 cols : 10,
                 rows : 7
             },
-            animation : {
+            animations : {
                 idle : [[0,1,200], [1,1,200], [2,1,200], [3,1,200]],
                 walk : [],
                 run : [],
@@ -32,7 +32,7 @@ let MONSTERS = [
                 cols : 10,
                 rows : 7
             },
-            animation : {
+            animations : {
                 idle : [[0,1,200], [1,1,200], [2,1,200], [3,1,200]],
                 walk : [],
                 run : [],
@@ -47,7 +47,7 @@ let MONSTERS = [
                 cols : 10,
                 rows : 7
             },
-            animation : {
+            animations : {
                 idle : [[0,1,200], [1,1,200], [2,1,200], [3,1,200]],
                 walk : [],
                 run : [],
@@ -65,7 +65,7 @@ const addPlayer = (id) => {
                 cols : 10,
                 rows : 7
             },
-            animation : {
+            animations : {
                 idle : [[0,1,200], [1,1,200], [2,1,200], [3,1,200]],
                 walk : [],
                 run : [],
