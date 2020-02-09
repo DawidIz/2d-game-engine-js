@@ -6,19 +6,55 @@ const io = require('socket.io')(http)
 
 const PORT = 4000
 let PLAYERS = []
+let IMAGES = ['static/img/bandit.png', 'static/img/deep.png', 'static/img/deep.png']
+
+let MONSTERS = [
+    {
+        id : null,
+        sprite : {
+            image : {
+                src : 'static/img/bandit.png',
+                cols : 10,
+                rows : 7
+            },
+            animation : {
+                idle : [[0,1,200], [1,1,200], [2,1,200], [3,1,200]],
+                walk : [],
+                run : [],
+            }
+        }
+    },
+    {
+        id : null,
+        sprite : {
+            image : {
+                src : 'static/img/deep.png',
+                cols : 10,
+                rows : 7
+            },
+            animation : {
+                idle : [[0,1,200], [1,1,200], [2,1,200], [3,1,200]],
+                walk : [],
+                run : [],
+            }
+        }
+    },
+]
 
 const addPlayer = (id) => {
     const player = {
         id,
-        image : {
-            src : 'static/img/bandit.png',
-            cols : 10,
-            rows : 7
-        },
-        animation : {
-            idle : [[0,1,200], [1,1,200], [2,1,200], [3,1,200]],
-            walk : [],
-            run : [],
+        sprite : {
+            image : {
+                src : 'static/img/bandit.png',
+                cols : 10,
+                rows : 7
+            },
+            animation : {
+                idle : [[0,1,200], [1,1,200], [2,1,200], [3,1,200]],
+                walk : [],
+                run : [],
+            }
         }
     }
     PLAYERS.push(player)
@@ -42,9 +78,10 @@ io.on('connection', socket => {
     socket.on('load game', () => {
         socket.emit('load game', {
             //maybe this is not the best option we gonna refactor this later
+            images : IMAGES,
             player : PLAYERS.find(player => player.id === socket.id),
             players : PLAYERS.filter(player => player.id !== socket.id),
-            monsters : [],
+            monsters : MONSTERS,
             map : []
         })
     })

@@ -1,7 +1,5 @@
 let GAME_OBJECTS = null
 const root = document.getElementById('root')
-// const canvas = Canvas()
-// const painter = new Painter(canvas)
 
 const painter = new Painter(400,200)
 
@@ -9,10 +7,10 @@ root.appendChild(painter.canvas)
 
 socket.emit('load game')
 
-// move new painter to top and then in promise resolved set new size ?
 class Sprite{
     //{src: "static/img/bandit.png", cols: 10, rows: 7}
     constructor(data){
+        //this.img = data
         this.loaded = false
         console.log(data)
         this.src = data.src
@@ -21,19 +19,32 @@ class Sprite{
         this.painter = new Painter()
         this.currentFrame = this.painter.canvas
 
-        loadImage(this.src).then(img => {
-            this.img = img
-            // console.log(this.img)
-            this.tile = {
-                width : this.img.width / this.cols,
-                height : this.img.height / this.rows
-            }
-            
-            this.painter.resize(this.tile.width, this.tile.height)    
-            this.loaded = true
+        this.find = GAME_IMAGES.find(image => image.id === this.src)
+        this.img = this.find.img
 
-            this.render(0,0)
-        })
+        this.tile = {
+            width : this.img.width / this.cols,
+            height : this.img.height / this.rows
+        }
+
+        this.painter.resize(this.tile.width, this.tile.height)    
+        this.loaded = true
+
+        this.render(0,0)
+
+        // loadImage(this.src).then(img => {
+        //     this.img = img
+        //     // console.log(this.img)
+        //     this.tile = {
+        //         width : this.img.width / this.cols,
+        //         height : this.img.height / this.rows
+        //     }
+            
+        //     this.painter.resize(this.tile.width, this.tile.height)    
+        //     this.loaded = true
+
+        //     this.render(0,0)
+        // })
     }
 
     // index x, index y
@@ -103,33 +114,56 @@ class Animation{
     }
 }
 
-
-const obj = {
-    sprite : null,
-    sprite2 : null,
-}
-
 let loading = true
+
+let GAME_IMAGES = []
+let OBJ = []
+
+
 const loop = setInterval(() => {
     
     //if loaded data from server create objects
     if(GAME_OBJECTS !== null && loading){
-        const img = GAME_OBJECTS.player.image
-        const animation = GAME_OBJECTS.player.animation
-        obj.sprite = new Animation(new Sprite(img), animation)
-        obj.sprite2 = new Animation(new Sprite(img), animation)
+
+        
+        (async() => {
+            console.log('async')
+            const x = await Promise.all(GAME_OBJECTS.images.map(image => loadImage2(image)))
+
+            GAME_IMAGES = [...x]
+
+            GAME_OBJECTS.monsters.map(m => {
+                const game_object = {
+                    sprite : new Animation(new Sprite(m.sprite.image),m.sprite.animation)
+                }
+
+                OBJ.push(game_object)
+
+            })
+        })()
+
+        // Promise.all(GAME_OBJECTS.images.map(image => loadImage2(image)))
+        // .then(res => GAME_IMAGES = [...res])
+
+        // const img = GAME_OBJECTS.player.image
+        // const animation = GAME_OBJECTS.player.animation
+        // obj.sprite = new Animation(new Sprite(img), animation)
+        // obj.sprite2 = new Animation(new Sprite(img), animation)
         loading = false
     }
 
     //after loading files start game loop
     if(!loading){
         painter.clear()
-        painter.image(obj.sprite.currentFrame)
-        painter.image(obj.sprite2.currentFrame,80,0)
+        OBJ.forEach((v,i) => {
+            painter.image(v.sprite.currentFrame,80 * i,0)
+        })
+
+        // painter.image(obj.sprite.currentFrame)
+        // painter.image(obj.sprite2.currentFrame,80,0)
     }
 
-
-
+    // console.log(GAME_IMAGES)
     // painter.image(obj.sprite.frame)
 
 
@@ -139,6 +173,6 @@ const loop = setInterval(() => {
 
 window.addEventListener('keypress',event => {
     if(event.keyCode === 32){
-        obj.sprite.stopped ? obj.sprite.start() : obj.sprite.stop()
+
     }
 })
