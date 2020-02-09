@@ -6,7 +6,7 @@ const io = require('socket.io')(http)
 
 const PORT = 4000
 let PLAYERS = []
-let IMAGES = ['static/img/bandit.png', 'static/img/deep.png', 'static/img/deep.png']
+let IMAGES = ['static/img/bandit.png', 'static/img/davis.png', 'static/img/deep.png']
 
 let MONSTERS = [
     {
@@ -29,6 +29,21 @@ let MONSTERS = [
         sprite : {
             image : {
                 src : 'static/img/deep.png',
+                cols : 10,
+                rows : 7
+            },
+            animation : {
+                idle : [[0,1,200], [1,1,200], [2,1,200], [3,1,200]],
+                walk : [],
+                run : [],
+            }
+        }
+    },    
+    {
+        id : null,
+        sprite : {
+            image : {
+                src : 'static/img/davis.png',
                 cols : 10,
                 rows : 7
             },
